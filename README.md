@@ -48,13 +48,13 @@ python manage.py runserver
 
 ```bash
 docker build -t django-jsonrpc .
-docker run --rm -p 8000:8000 django-jsonrpc
+docker run --rm -p 8000:8000 --env-file .env django-jsonrpc
 ```
 
 Прогнать тесты внутри контейнера:
 
 ```bash
-docker run --rm django-jsonrpc uv run python manage.py test
+docker run --rm --env-file .env django-jsonrpc uv run python manage.py test
 ```
 
 Приложение будет доступно на `http://127.0.0.1:8000/`.

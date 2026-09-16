@@ -16,6 +16,9 @@ from pathlib import Path
 
 
 def load_dotenv(path: Path) -> None:
+    # Skip, if file is not provided.
+    if not path.exists():
+        return
     with open(path, encoding="utf-8") as f:
         for line in f:
             line = line.strip()
