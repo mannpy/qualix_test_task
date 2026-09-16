@@ -10,10 +10,28 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
 
+import base64
+import os
 from pathlib import Path
+
+
+def load_dotenv(path: Path) -> None:
+    with open(path, encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            key = key.strip()
+            value = value.strip().strip('"').strip("'")
+            os.environ.setdefault(key, value)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+# Load env variables from .env file
+load_dotenv(BASE_DIR / ".env")
 
 
 # Quick-start development settings - unsuitable for production
@@ -133,13 +151,11 @@ MAILERS = {
 
 JSONRPC_ENDPOINT = "https://slb.medv.ru/api/v2/"
 
-# In a real deployment these values would come from an environment variable
-# rather than being committed to source control. They are inlined here
-# only because the assignment explicitly asks for that.
-JSONRPC_CLIENT_CERT_PEM = """
-REPLACE_WITH_ACTUAL_CERTIFICATE_CONTENT
-"""
-JSONRPC_CLIENT_KEY_PEM = """
-REPLACE_WITH_ACTUAL_CERTIFICATE_CONTENT
-"""
+# Decode base64 valuess.
+JSONRPC_CLIENT_CERT_PEM = base64.b64decode(
+    os.environ["JSONRPC_CLIENT_CERT_PEM"]
+).decode("utf-8")
+JSONRPC_CLIENT_KEY_PEM = base64.b64decode(
+    os.environ["JSONRPC_CLIENT_KEY_PEM"]
+).decode("utf-8")
 JSONRPC_TIMEOUT = 10.0
