@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JSON-RPC view</title>
+    <style>
+        body {font-family: system-ui, sans-serif; max-width: 720px; margin: 2rem auto; color: #1a1a1a; box-sizing: border-box; padding: 0 0.5rem}
+        label { display:block; font-weight: 600; margin-top:1rem; }
+        input[type=text], textarea { width: 100%; box-sizing: border-box; padding: 0.5rem, font-family: monospace; line-height: 30px}
+        button {background: #f4f4f4; padding: 0.5rem 1.2rem; cursor: pointer; border: 1px solid #c0c0c0}
+        pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; border-radius: 2px; }
+        .result { border-left: 4px solid #2e7d32; }
+        .error { border-left: 4px solid #c62828; }
+        .error-kind { font-size: 0.85rem; color: #c62828; text-transform: uppercase; letter-spacing: 0.4em; }
+    </style>
+</head>
+<body>
+    <h1>JSON_RPC 2.0</h1>
+    <p>Вызов методов <code>{{ endpoint }}</code> через mTLS</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <label for="{{ form.method.id_for_label }}">{{ form.method.label }}</label>
+        {{ form.method }}
+        {{ form.method.errors }}
+
+        <label for="{{ form.params.id_for_label}}">{{ form.params.label }}</label>
+        {{ form.params }}
+        {{ form.params.error }}
+
+        <button type="submit">Вызвать</button>
+    </form>
+
+    {% if result_json %}
+        <h2>Результат: <code>{{ submitted_method }}</code></h2>
+        <pre class="result">{{ result_json }}</pre>
+    {% endif %}
+
+    {% if error_message %}
+        <h2>Ошибка</h2>
+        <p class="error-kind">
+            {% if error_kind == "rpc" %}Сервис вернул ошибку{% else %}Транспортная ошибка{% endif %}
+        </p>
+        <pre class="error">{{ error_message }}</pre>
+        {% if error_data %}
+            <p>{{ error_data }}</p>
+        {% endif %}
+    {% endif %}
+</body>
+</html>
