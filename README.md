@@ -26,7 +26,7 @@ base64 -w0 client2026test.key
 
 ### Вариант 1 — uv (рекомендуется)
 
-> Как установить: `https://docs.astral.sh/uv/getting-started/installation/``
+> Как установить: [ссылка](https://docs.astral.sh/uv/getting-started/installation/)
 
 ```bash
 uv sync
